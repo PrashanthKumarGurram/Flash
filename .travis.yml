@@ -1,5 +1,7 @@
 language: csharp
 solution: flash.sln
+mono: none
+dotnet: 2.1
 install:
   - nuget restore flash.sln
 script:
