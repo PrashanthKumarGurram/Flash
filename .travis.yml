@@ -1,0 +1,7 @@
+language: csharp
+solution: flash.sln
+install:
+  - nuget restore flash.sln
+script:
+  - dotnet build flash.sln
+  - dotnet test flash.sln
