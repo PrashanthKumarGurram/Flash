@@ -85,5 +85,37 @@ namespace Tests
         {                       
             Assert.AreEqual(expectedValue, new Lexer(test).NextToken().Value);
         }
+
+        [TestCase("?")]
+        [TestCase("|")]
+        [TestCase("~")]
+        [TestCase("@")]
+        [TestCase("#")]
+        [TestCase("$")]
+        [TestCase("%")]
+        [TestCase("^")]
+        [TestCase("&")]
+        [TestCase("_")]
+        [TestCase("=")]
+        [TestCase("\\")]
+        [TestCase("}")]
+        [TestCase("{")]
+        [TestCase("[")]
+        [TestCase("]")]
+        [TestCase(".")]
+        [TestCase(",")]
+        [TestCase("\"")]
+        [TestCase(":")]
+        [TestCase(";")]
+        [TestCase("'")]        
+        public void LexerDiagnostic_Test(string test)
+        {
+            var lexer = new Lexer(test);
+            var token = lexer.NextToken();
+            Assert.AreEqual(token.Kind, TokenKind.BadToken);
+            Assert.IsTrue(lexer.Diagnostics.Any());
+            var msg = lexer.Diagnostics.FirstOrDefault();
+            Assert.AreEqual($"ERROR : Bad input char {test}", msg);
+        }
     }
 }

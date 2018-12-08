@@ -23,7 +23,7 @@ namespace Flash
             _position++;
         }
 
-        public IEnumerable<string> Diadnostics => _diagnostics;
+        public IEnumerable<string> Diagnostics => _diagnostics;
         public SyntaxToken NextToken()
         {
             if(_position >= _text.Length)
@@ -66,7 +66,7 @@ namespace Flash
             else if(Current == ')')
                 return new SyntaxToken(TokenKind.CloseParenthesisToken,_position++,")",null);
             
-            _diagnostics.Add($"ERROR : bad input char {Current}");
+            _diagnostics.Add($"ERROR : Bad input char {Current}");
             return new SyntaxToken(
                 TokenKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
         }        
