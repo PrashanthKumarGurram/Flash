@@ -55,22 +55,40 @@ namespace Flash
             if(Current.Kind == kind)
                 return NextToken();
             _diagnostics.Add($"ERROR : Unexpected token <{Current.Kind}>, expected <{kind}>");
-            return new SyntaxToken(kind, Current.Position, null, null); 
+            return new SyntaxToken(kind, Current.Position, null, null);
         }
 
         public SyntaxTree Parse()
         {
             var expression = ParseExpression();
             var endOfFileToken = Match(TokenKind.EndOfFileToken);
-            return new SyntaxTree(_diagnostics,expression,endOfFileToken);
+            return new SyntaxTree(_diagnostics, expression, endOfFileToken);
         }
 
         private ExpressionSyntax ParseExpression()
         {
-            var left = ParsePrimaryExpression();
+            return ParseTerm();
+        }
+        private ExpressionSyntax ParseTerm()
+        {
+            var left = ParseFactor();
 
             while (Current.Kind == TokenKind.PlusToken ||
-                Current.Kind == TokenKind.MinusToken)
+                    Current.Kind == TokenKind.MinusToken)
+            {
+                var operatorToken = NextToken();
+                var right = ParseFactor();
+                left = new BinaryExpression(left, operatorToken, right);
+            }
+
+            return left;
+        }
+        private ExpressionSyntax ParseFactor()
+        {
+            var left = ParsePrimaryExpression();
+
+            while (Current.Kind == TokenKind.SlashToken ||
+                    Current.Kind == TokenKind.StarToken)
             {
                 var operatorToken = NextToken();
                 var right = ParsePrimaryExpression();
@@ -79,9 +97,16 @@ namespace Flash
 
             return left;
         }
-
         private ExpressionSyntax ParsePrimaryExpression()
         {
+            if (Current.Kind == TokenKind.OpenParenthesisToken)
+            {
+                var openParenth = NextToken();
+                var expression = ParseExpression();
+                var closeParenth = Match(TokenKind.CloseParenthesisToken);
+                return new ParenthesizedExpressionSyntax(openParenth, expression, closeParenth);
+            }
+
             var numberToken = Match(TokenKind.NumberToken);
             return new NumberExpressionSyntax(numberToken);
         }
