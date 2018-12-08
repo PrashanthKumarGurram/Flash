@@ -7,6 +7,7 @@ namespace Flash
     {
         private readonly SyntaxToken[] _tokens;
         private int _position;
+        private List<string> _diagnostics = new List<string>();
         public Parser(string text)
         {
             var tokens = new List<SyntaxToken>();
@@ -24,6 +25,7 @@ namespace Flash
             } while (token.Kind != TokenKind.EndOfFileToken);
 
             _tokens = tokens.ToArray();
+            _diagnostics.AddRange(lexer.Diadnostics);
         }
 
         private SyntaxToken Peek(int offset)
@@ -36,6 +38,8 @@ namespace Flash
 
             return _tokens[index];
         }
+
+        public IEnumerable<string> Diagnostics => _diagnostics;
 
         private SyntaxToken Current => Peek(0);
 
@@ -50,7 +54,7 @@ namespace Flash
         {
             if(Current.Kind == kind)
                 return NextToken();
-            
+            _diagnostics.Add($"ERROR : Unexpected token <{Current.Kind}>, expected <{kind}>");
             return new SyntaxToken(kind, Current.Position, null, null); 
         }
 

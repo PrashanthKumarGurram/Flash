@@ -6,7 +6,9 @@ namespace Flash
     public class Lexer
     {
         private string _text;
-        private int _position; 
+        private int _position;
+        private List<string> _diagnostics = 
+            new List<string>(); 
 
         public Lexer(string text)
         {
@@ -21,6 +23,7 @@ namespace Flash
             _position++;
         }
 
+        public IEnumerable<string> Diadnostics => _diagnostics;
         public SyntaxToken NextToken()
         {
             if(_position >= _text.Length)
@@ -62,7 +65,8 @@ namespace Flash
                 return new SyntaxToken(TokenKind.OpenParenthesisToken,_position++,"(",null);
             else if(Current == ')')
                 return new SyntaxToken(TokenKind.CloseParenthesisToken,_position++,")",null);
-
+            
+            _diagnostics.Add($"ERROR : bad input char {Current}");
             return new SyntaxToken(
                 TokenKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
         }        

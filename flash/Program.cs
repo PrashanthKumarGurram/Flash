@@ -19,7 +19,16 @@ namespace Flash
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkGray;
                 PrintTree(expressionSyntax);
-                Console.ForegroundColor = color;                          
+                Console.ForegroundColor = color;
+
+                if(parser.Diagnostics.Any())
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
+                    foreach(var error in parser.Diagnostics)
+                        Console.WriteLine(error);
+                        
+                    Console.ForegroundColor = color;
+                }                          
             }
         }
 
