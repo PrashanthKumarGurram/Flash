@@ -38,7 +38,8 @@ namespace Flash
 
                 var length = _position - start;
                 var text = this._text.Substring(start, length);
-                int.TryParse(text,out var value);
+                if(!int.TryParse(text,out var value))
+                    _diagnostics.Add($"The number {text} isn't a valid Int32");
                 return new SyntaxToken(TokenKind.NumberToken,start,text,value);
             }
 

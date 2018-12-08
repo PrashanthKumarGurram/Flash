@@ -117,5 +117,16 @@ namespace Tests
             var msg = lexer.Diagnostics.FirstOrDefault();
             Assert.AreEqual($"ERROR : Bad input char {test}", msg);
         }
+
+        [TestCase("999999999999999")]
+        public void LexerDiagnosticInt32_Test(string test)
+        {
+            var lexer = new Lexer(test);
+            var token = lexer.NextToken();
+            Assert.AreEqual(token.Kind, TokenKind.NumberToken);
+            Assert.IsTrue(lexer.Diagnostics.Any());
+            var msg = lexer.Diagnostics.FirstOrDefault();
+            Assert.AreEqual($"The number {test} isn't a valid Int32", msg);
+        }
     }
 }
