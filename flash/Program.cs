@@ -7,6 +7,7 @@ namespace Flash
     {
         static void Main(string[] args)
         {
+            bool showTree = false;
             while(true)
             {
                 Console.Write("> ");
@@ -14,15 +15,26 @@ namespace Flash
                 if(string.IsNullOrWhiteSpace(line))
                     return;
                 
+                if(line.Equals("#showTree"))
+                {
+                    showTree = !showTree;
+                    continue;
+                }   
+                
                 var parser = new Parser(line);
                 var syntaxTree = parser.Parse();
-                var color = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                PrintTree(syntaxTree.Root);
-                Console.ForegroundColor = color;
+
+                if(showTree)
+                {
+                    var color = Console.ForegroundColor;
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    PrintTree(syntaxTree.Root);
+                    Console.ForegroundColor = color;
+                }
 
                 if(parser.Diagnostics.Any())
                 {
+                    var color = Console.ForegroundColor;
                     Console.ForegroundColor = ConsoleColor.DarkRed;
                     foreach(var error in parser.Diagnostics)
                         Console.WriteLine(error);
@@ -31,6 +43,7 @@ namespace Flash
                 }
                 else
                 {
+                    var color = Console.ForegroundColor;
                     var eval = new Evaluator(syntaxTree.Root);
                     var result = eval.Evaluate();
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
