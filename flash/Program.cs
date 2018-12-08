@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Flash
 {
@@ -13,15 +14,31 @@ namespace Flash
                 if(string.IsNullOrWhiteSpace(line))
                     return;
                 
-                foreach(var token in new Lexer(line).GetTokens())
-                {
-                    Console.Write($"{token.Kind} '{token.Text}'");
-                    if(token.Value != null)
-                        Console.Write($" {token.Value}");
-                    
-                    Console.WriteLine();
-                }
+                var parser = new Parser(line);
+                var expressionSyntax = parser.Parse();
+                var color = Console.ForegroundColor;
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                PrintTree(expressionSyntax);
+                Console.ForegroundColor = color;                          
             }
+        }
+
+        static void PrintTree(SyntaxNode node, string indent = "", bool isLast = true)
+        {
+            var marker = isLast ? "└──" : "├──";
+            Console.Write(indent);
+            Console.Write(marker);
+            Console.Write(node.Kind);
+            if(node is SyntaxToken t && t.Value != null)
+            {
+                Console.Write(" ");
+                Console.Write(t.Value);
+            }
+            Console.WriteLine();
+            indent += isLast ? "    " : "│   ";
+            var lastChild = node.GetChildren().LastOrDefault();            
+            foreach (var child in node.GetChildren())
+                PrintTree(child, indent, child == lastChild);            
         }
     }
 }

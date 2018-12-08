@@ -65,14 +65,6 @@ namespace Flash
 
             return new SyntaxToken(
                 TokenKind.BadToken, _position++, _text.Substring(_position - 1, 1), null);
-        }
-
-        public IEnumerable<SyntaxToken> GetTokens()
-        {
-            SyntaxToken token;
-            while((token = NextToken()).Kind != TokenKind.EndOfFileToken)
-                yield return token;
-        }
-        
+        }        
     }
 }
