@@ -3,7 +3,7 @@ solution: flash.sln
 mono: none
 dotnet: 2.1
 install:
-  - nuget restore flash.sln
+  - dotnet restore flash.sln
 script:
   - dotnet build flash.sln
   - dotnet test flash.sln
