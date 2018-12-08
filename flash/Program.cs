@@ -28,6 +28,14 @@ namespace Flash
                         Console.WriteLine(error);
                         
                     Console.ForegroundColor = color;
+                }
+                else
+                {
+                    var eval = new Evaluator(syntaxTree.Root);
+                    var result = eval.Evaluate();
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.WriteLine($"> {result}");
+                    Console.ForegroundColor = color;
                 }                          
             }
         }
