@@ -25,7 +25,7 @@ namespace Flash
             } while (token.Kind != TokenKind.EndOfFileToken);
 
             _tokens = tokens.ToArray();
-            _diagnostics.AddRange(lexer.Diadnostics);
+            _diagnostics.AddRange(lexer.Diagnostics);
         }
 
         private SyntaxToken Peek(int offset)
@@ -58,18 +58,25 @@ namespace Flash
             return new SyntaxToken(kind, Current.Position, null, null); 
         }
 
-        public ExpressionSyntax Parse()
+        public SyntaxTree Parse()
+        {
+            var expression = ParseExpression();
+            var endOfFileToken = Match(TokenKind.EndOfFileToken);
+            return new SyntaxTree(_diagnostics,expression,endOfFileToken);
+        }
+
+        private ExpressionSyntax ParseExpression()
         {
             var left = ParsePrimaryExpression();
 
-            while(Current.Kind == TokenKind.PlusToken ||
+            while (Current.Kind == TokenKind.PlusToken ||
                 Current.Kind == TokenKind.MinusToken)
             {
                 var operatorToken = NextToken();
                 var right = ParsePrimaryExpression();
-                left = new BinaryExpression(left, operatorToken, right); 
+                left = new BinaryExpression(left, operatorToken, right);
             }
-                        
+
             return left;
         }
 

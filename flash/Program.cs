@@ -15,10 +15,10 @@ namespace Flash
                     return;
                 
                 var parser = new Parser(line);
-                var expressionSyntax = parser.Parse();
+                var syntaxTree = parser.Parse();
                 var color = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.DarkGray;
-                PrintTree(expressionSyntax);
+                PrintTree(syntaxTree.Root);
                 Console.ForegroundColor = color;
 
                 if(parser.Diagnostics.Any())
