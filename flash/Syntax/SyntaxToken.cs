@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Flash
+namespace Flash.Syntax
 {
     public class SyntaxToken : SyntaxNode
     {

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Flash
+namespace Flash.Syntax
 {
     public sealed class BinaryExpression : ExpressionSyntax
     {
